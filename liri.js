@@ -25,7 +25,7 @@ switch (action) {
         break;
 
     default:
-    console.log("To use this app, use the following commands:\n concert-this --Seach for concerts by bandname\n spotify-this-song --Display information about song title\n movie-this -- return information regarding specified movie\n do-what-it-says -- run commands from a text file")
+    console.log("To use this app, use the following commands:\n concert-this --Seach for concerts by bandname\n spotify-this-song --Display information about song title\n movie-this -- return information regarding specified movie\n do-what-it-says -- run commands from a text file. Please specify FILENAME.EXT")
         break;
 }
 fs.writeFile("log.txt", action + "," + value, function(err) {
@@ -95,7 +95,9 @@ function searchOmdbAPI(movieName) {
 
 function searchTextFile(fileName) {
     fs.readFile(fileName, "utf8", function(error, data) {
-        if (error) {
+        if (error) { if (error === "ERR_INVALID_ARG_TYPE"){
+            console.log("Please specify a file " + error);
+        }
           return console.log(error);
         }
         console.log(data);
