@@ -6,8 +6,6 @@ var request = require("request");
 var moment = require("moment");
 var fs = require("fs");
 
-var createLine = "========================================"
-
 function askLiri(action, value) {
 switch (action) {
     case "concert-this":
@@ -27,7 +25,6 @@ switch (action) {
         break;
 
     default:
-    console.log("USAGE: node liri.js <command> <input>\n")
     console.log("To use this app, use the following commands:\n concert-this --Seach for concerts by bandname\n spotify-this-song --Display information about song title\n movie-this -- return information regarding specified movie\n do-what-it-says -- run commands from a text file")
         break;
 }
@@ -46,7 +43,6 @@ function searchBandsAPI(bandName) {
         if (!error && response.statusCode === 200) {
             var objectBody = JSON.parse(body);
             for (i = 0; i < objectBody.length; i++) {
-                console.log(createLine);
                 console.log("Venue: " + objectBody[i].venue.name);
                 console.log("City: " + objectBody[i].venue.city + ", " + objectBody[i].venue.country);
                 console.log(moment(objectBody[i].datetime).format("MM/DD/YY"));
@@ -64,13 +60,13 @@ function searchSpotifyAPI(songName) {
     } else {
     spotify.search({ type: 'track', query: songName })
   .then(function(response) {
-    var songData = ""
-    songData += createLine + "\n"; 
-    songData += "Song: " + response.tracks.items[0].name + "\n";
-    songData += "Artist: " + response.tracks.items[0].artists.map(artist => artist.name).join(", ") + "\n";
-    songData += "URL: " + response.tracks.items[0].album.external_urls.spotify + "\n";
-    songData += "Album: " + response.tracks.items[0].album.name;
-    console.log(songData)
+    var songInfo = ""
+    songInfo += "\n"; 
+    songInfo += "Song: " + response.tracks.items[0].name + "\n";
+    songInfo += "Artist: " + response.tracks.items[0].artists.map(artist => artist.name).join(", ") + "\n";
+    songInfo += "URL: " + response.tracks.items[0].album.external_urls.spotify + "\n";
+    songInfo += "Album: " + response.tracks.items[0].album.name;
+    console.log(songInfo)
   })
   .catch(function(err) {
     console.log(err);
@@ -82,7 +78,6 @@ function searchOmdbAPI(movieName) {
     request("http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy", function(error, response, body) {
   if (!error && response.statusCode === 200 && movieName != undefined) {
     
-    console.log(createLine);
     console.log("Title: " + JSON.parse(body).Title);
     console.log("Year Released: " + JSON.parse(body).Year);
     console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
@@ -92,7 +87,7 @@ function searchOmdbAPI(movieName) {
     console.log("Plot Summary: " + JSON.parse(body).Plot);
     console.log("Actors: " + JSON.parse(body).Actors);
   } else {
-      movieName = "Nobody's Fool"
+      movieName = "Mr. Nobody"
     searchOmdbAPI(movieName);
 }
 });
